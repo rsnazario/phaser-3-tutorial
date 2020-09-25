@@ -21,6 +21,8 @@ var config = {
 var game = new Phaser.Game(config);
 let platforms;
 let player;
+let cursors;
+
 
 function preload () {
   console.log('yes');
@@ -70,8 +72,27 @@ function create () {
 
   // player x platform collision:
   this.physics.add.collider(player, platforms);
+
+
 }
 
-function update ()
-{
+function update () {
+  // player cursors --> moving
+  cursors = this.input.keyboard.createCursorKeys();
+
+  if (cursors.left.isDown) {
+    player.setVelocityX(-160);
+    player.anims.play('left', true);
+  }
+  else if (cursors.right.isDown) {
+    player.setVelocityX(160);
+    player.anims.play('right', true);
+  } else {
+    player.setVelocityX(0);
+    player.anims.play('turn');
+  }
+
+  if (cursors.up.isDown && player.body.touching.down) {
+    player.setVelocityY(-330);
+  }
 }
