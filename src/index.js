@@ -22,7 +22,7 @@ var game = new Phaser.Game(config);
 let platforms;
 let player;
 let cursors;
-
+let stars;
 
 function preload () {
   console.log('yes');
@@ -37,7 +37,6 @@ function preload () {
 function create () {
   
   this.add.image(0, 0, 'sky').setOrigin(0, 0);
-  this.add.image(400, 300, 'star').setOrigin(0, 0);
   
   // platforms --> physics group --> Static --> wont move ever!
   platforms = this.physics.add.staticGroup();
@@ -73,7 +72,18 @@ function create () {
   // player x platform collision:
   this.physics.add.collider(player, platforms);
 
+  // Stars
+  stars = this.physics.add.group({
+    key: 'star',
+    repeat: 11,
+    setXY: { x: 12, y: 0, stepX: 70},
+  })
 
+  stars.children.iterate(function(child) {
+    child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+  })
+
+  this.physics.add.collider(stars, platforms);
 }
 
 function update () {
