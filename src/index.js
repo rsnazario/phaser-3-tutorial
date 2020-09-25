@@ -19,6 +19,7 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
+let gameOver = false;
 let platforms;
 let player;
 let cursors;
@@ -28,14 +29,12 @@ let scoreText;
 let bombs;
 
 function preload () {
-  console.log('yes');
   this.load.image('sky', '../assets/sky.png');
   this.load.image('ground', '../assets/platform.png');
   this.load.image('star', '../assets/star.png');
   this.load.image('bomb', '../assets/bomb.png');
   this.load.spritesheet('dude', '../assets/dude.png', { frameWidth: 32, frameHeight: 48 });
 }
-
 
 function create () {
   
@@ -128,6 +127,12 @@ function hitBomb(player, bomb) {
   player.setTint(0xff0000);
   player.anims.play('turn');
   gameOver = true;
+  this.add.text(300, 300, 'Final Score: ' + score, {fontSize: '32px', fill:'#000' });
+  this.add.text(300, 350, 'Click to Restart', {fontSize: '32px', fill: '#000'});
+  this.input.on('pointerup', () => {
+    this.anims.resumeAll();
+    this.scene.restart();
+  });
 }
 
 function update () {
