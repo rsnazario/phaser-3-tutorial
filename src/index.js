@@ -13,7 +13,7 @@ var config = {
     default: 'arcade',
     arcade: {
       gravity: { y: 300},
-      debug: true
+      debug: false
     }
   },
 };
@@ -84,6 +84,14 @@ function create () {
   })
 
   this.physics.add.collider(stars, platforms);
+
+  // stars overlap with player
+  this.physics.add.overlap(player, stars, collectStar, null, this) 
+
+}
+
+function collectStar(player, star) {
+  star.disableBody(true, true);
 }
 
 function update () {
