@@ -25,6 +25,7 @@ let cursors;
 let stars;
 let score = 0;
 let scoreText;
+let bombs;
 
 function preload () {
   console.log('yes');
@@ -92,6 +93,14 @@ function create () {
 
   // text for score
   scoreText = this.add.text(16, 16, 'score: 0', {fontSize: '32px', fill: '#000' });
+
+  // ------------------------- part 10 //
+  /// create Bombs
+  bombs = this.physics.add.group();
+
+  this.physics.add.collider(bombs, platforms);
+  
+  this.physics.add.collider(player, bombs, hitBomb, null, this); 
 }
 
 function collectStar(player, star) {
@@ -99,6 +108,26 @@ function collectStar(player, star) {
 
   score += 10;
   scoreText.setText('Score: ' + score);
+  // adding for part 10
+  if (stars.countActive(true) === 0) {
+    stars.children.iterate(function (child) {
+      child.enableBody(true, child.x, 0, true, true);
+    });
+
+    var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+
+    var bomb = bombs.create(x, 16, 'bomb');
+    bomb.setBounce(1);
+    bomb.setCollideWorldBounds(true);
+    bomb.setVelocity(Phaser.Math.Between((-200, 200), 20));
+  }
+}
+
+function hitBomb(player, bomb) {
+  this.physics.pause();
+  player.setTint(0xff0000);
+  player.anims.play('turn');
+  gameOver = true;
 }
 
 function update () {
